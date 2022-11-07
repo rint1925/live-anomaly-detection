@@ -60,7 +60,8 @@ def get_hls_streaming_session_url(stream_name: str) -> str:
         "kinesis-video-archived-media", endpoint_url=get_data_endpoint(stream_name, "GET_HLS_STREAMING_SESSION_URL"), region_name='ap-northeast-1'
     ).get_hls_streaming_session_url(
         StreamName=stream_name,
-        PlaybackMode="LIVE"
+        PlaybackMode="LIVE",
+        Expires=43200
     )
     return res["HLSStreamingSessionURL"]
 
@@ -125,7 +126,11 @@ while True:
         if cv2.waitKey(delay) & 0xFF == ord('q'):
             break
     else:
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        print('Update HLS URL')
+        hls_url = get_hls_streaming_session_url(stream_name)
+        cap = cv2.VideoCapture(hls_url)
+        continue
+        
 
 # cv2.destroyWindow(window_name)
 
